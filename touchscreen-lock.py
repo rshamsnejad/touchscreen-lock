@@ -14,16 +14,16 @@ def showPIL(pilImage):
     root.bind("<Escape>", lambda e: (e.widget.withdraw(), e.widget.quit()))
     canvas = tkinter.Canvas(root,width=w,height=h)
     canvas.pack()
-    canvas.configure(background='black') # Empty string means transparent
+    canvas.configure(background='white') # Empty string means transparent
     imgWidth, imgHeight = pilImage.size
     if imgWidth > w or imgHeight > h:
         ratio = min(w/imgWidth, h/imgHeight)
         imgWidth = int(imgWidth*ratio)
         imgHeight = int(imgHeight*ratio)
         pilImage = pilImage.resize((imgWidth,imgHeight), Image.ANTIALIAS)
-    #image = ImageTk.PhotoImage(pilImage)
-    #imagesprite = canvas.create_image(w/2,h/2,image=image)
+    image = ImageTk.PhotoImage(pilImage)
+    imagesprite = canvas.create_image(w/2,h/2,image=image)
     root.mainloop()
 
-im = Image.open('/home/glenoboby/Pictures/wallpapers/close-up-of-wooden-plank-326311.jpg')
+im = Image.open('./padlock.png')
 showPIL(im)
