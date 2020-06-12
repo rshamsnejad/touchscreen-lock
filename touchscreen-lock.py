@@ -4,35 +4,35 @@ import tkinter
 
 LockImage = './padlock.gif'
 
-def showLockScreen(ImageToDisplay):
+def showLockScreen(ImagePath):
 
-    root = tkinter.Tk()
+    RootWindow = tkinter.Tk()
 
     # Root attributes
-    root.attributes('-type', 'normal')
-    root.attributes('-alpha', 0.5) # 50% global transparency
-    root.attributes('-fullscreen', 'True')
+    RootWindow.attributes('-type', 'normal')
+    RootWindow.attributes('-alpha', 0.5) # 50% global transparency
+    RootWindow.attributes('-fullscreen', 'True')
 
     # Escape key to quit
-    root.bind("<Escape>", lambda e: (e.widget.withdraw(), e.widget.quit()))
+    RootWindow.bind("<Escape>", lambda e: (e.widget.withdraw(), e.widget.quit()))
 
     # Fullscreen dimensions
-    w, h = root.winfo_screenwidth(), root.winfo_screenheight()
+    w, h = RootWindow.winfo_screenwidth(), RootWindow.winfo_screenheight()
 
     # Set root fullscreen
-    root.geometry("%dx%d+0+0" % (w, h))
+    RootWindow.geometry("%dx%d+0+0" % (w, h))
 
     # Set canvas fullroot
-    canvas = tkinter.Canvas(root, width=w, height=h)
-    canvas.pack()
-    canvas.configure(background='white') # Empty string means transparent
+    LockScreenCanvas = tkinter.Canvas(RootWindow, width=w, height=h)
+    LockScreenCanvas.pack()
+    LockScreenCanvas.configure(background='white') # Empty string means transparent
 
     # Display image in canvas
-    image = tkinter.PhotoImage(file=ImageToDisplay)
-    imagesprite = canvas.create_image(w/2, h/2, image=image)
+    ImageToDisplay = tkinter.PhotoImage(file=ImagePath)
+    ImageSprite = LockScreenCanvas.create_image(w/2, h/2, image=ImageToDisplay)
 
     # Take focus and start
-    root.focus_set()
-    root.mainloop()
+    RootWindow.focus_set()
+    RootWindow.mainloop()
 
 showLockScreen(LockImage)
