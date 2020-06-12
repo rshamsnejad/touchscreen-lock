@@ -2,11 +2,19 @@
 
 import tkinter
 
-LockImage = './padlock.gif'
+############################ Global variables ##################################
 
-def showLockScreen(ImagePath):
+RootLockScreen = tkinter.Tk()
 
-    RootWindow = tkinter.Tk()
+LockImagePath = './padlock.gif'
+LockImage = tkinter.PhotoImage(file=LockImagePath)
+
+################################################################################
+
+
+############################ Functions #########################################
+
+def setLockScreen(RootWindow, ImageToDisplay):
 
     # Root attributes
     RootWindow.attributes('-type', 'normal')
@@ -28,11 +36,19 @@ def showLockScreen(ImagePath):
     LockScreenCanvas.configure(background='white') # Empty string means transparent
 
     # Display image in canvas
-    ImageToDisplay = tkinter.PhotoImage(file=ImagePath)
     ImageSprite = LockScreenCanvas.create_image(w/2, h/2, image=ImageToDisplay)
 
     # Take focus and start
     RootWindow.focus_set()
-    RootWindow.mainloop()
+    # RootWindow.mainloop()
 
-showLockScreen(LockImage)
+    return RootWindow
+
+################################################################################
+
+
+################################ PROGRAM #######################################
+
+LockScreen = setLockScreen(RootLockScreen, LockImage)
+
+LockScreen.mainloop()
