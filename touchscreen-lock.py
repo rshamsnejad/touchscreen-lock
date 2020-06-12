@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
 import tkinter
-from PIL import Image, ImageTk
 
-def showPIL(pilImage):
+LockImage = './padlock.gif'
+
+def showLockScreen(ImageToDisplay):
 
     root = tkinter.Tk()
 
@@ -26,19 +27,12 @@ def showPIL(pilImage):
     canvas.pack()
     canvas.configure(background='white') # Empty string means transparent
 
-    # Set up image
-    imgWidth, imgHeight = pilImage.size
-    if imgWidth > w or imgHeight > h:
-        ratio = min(w/imgWidth, h/imgHeight)
-        imgWidth = int(imgWidth*ratio)
-        imgHeight = int(imgHeight*ratio)
-        pilImage = pilImage.resize((imgWidth, imgHeight), Image.ANTIALIAS)
-    image = ImageTk.PhotoImage(pilImage)
+    # Display image in canvas
+    image = tkinter.PhotoImage(file=ImageToDisplay)
     imagesprite = canvas.create_image(w/2, h/2, image=image)
 
     # Take focus and start
     root.focus_set()
     root.mainloop()
 
-im = Image.open('./padlock.png')
-showPIL(im)
+showLockScreen(LockImage)
