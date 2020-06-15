@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
-from sys import version_info
-if version_info.major == 2:
-    # We are using Python 2.x
+import sys
+if sys.version_info.major == 2: # We are using Python 2.x
     import Tkinter as tk
-elif version_info.major == 3:
-    # We are using Python 3.x
+elif sys.version_info.major == 3: # We are using Python 3.x
     import tkinter as tk
+
+sys.path.append('libraries')
+import keyboard
 
 ############################ Global variables ##################################
 
@@ -14,6 +15,8 @@ RootLockScreen = tk.Tk()
 
 LockImagePath = './padlock.gif'
 LockImage = tk.PhotoImage(file=LockImagePath)
+
+LockScreenDisplayed = False
 
 ################################################################################
 
@@ -29,6 +32,7 @@ def setLockScreen(RootWindow, ImageToDisplay):
 
     # Escape key to quit
     RootWindow.bind("<Escape>", lambda e: (e.widget.withdraw(), e.widget.quit()))
+    # RootWindow.bind("<Escape>", lambda e: (toggleLockScreen(RootWindow)))
 
     # Fullscreen dimensions
     w, h = RootWindow.winfo_screenwidth(), RootWindow.winfo_screenheight()
@@ -46,15 +50,26 @@ def setLockScreen(RootWindow, ImageToDisplay):
 
     # Take focus and start
     RootWindow.focus_set()
-    # RootWindow.mainloop()
 
-    return RootWindow
+def toggleLockScreen(LockScreenToToggle):
+    global LockScreenDisplayed
+    if LockScreenDisplayed:
+        LockScreenToToggle.withdraw()
+        # print("HIDDEN")
+        LockScreenDisplayed = False
+    else:
+        LockScreenToToggle.deiconify()
+        # print("SHOWN")
+        LockScreenDisplayed = True
 
 ################################################################################
 
 
 ################################ PROGRAM #######################################
 
-LockScreen = setLockScreen(RootLockScreen, LockImage)
+setLockScreen(RootLockScreen, LockImage)
+RootLockScreen.withdraw() # Start hidden
 
-LockScreen.mainloop()
+keyboard.add_hotkey('ctrl+shift+alt+l', toggleLockScreen, args=[RootLockScreen])
+
+RootLockScreen.mainloop()
