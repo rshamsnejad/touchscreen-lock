@@ -1,13 +1,19 @@
 #!/usr/bin/python
 
-import tkinter
+from sys import version_info
+if version_info.major == 2:
+    # We are using Python 2.x
+    import Tkinter as tk
+elif version_info.major == 3:
+    # We are using Python 3.x
+    import tkinter as tk
 
 ############################ Global variables ##################################
 
-RootLockScreen = tkinter.Tk()
+RootLockScreen = tk.Tk()
 
 LockImagePath = './padlock.gif'
-LockImage = tkinter.PhotoImage(file=LockImagePath)
+LockImage = tk.PhotoImage(file=LockImagePath)
 
 ################################################################################
 
@@ -31,7 +37,7 @@ def setLockScreen(RootWindow, ImageToDisplay):
     RootWindow.geometry("%dx%d+0+0" % (w, h))
 
     # Set canvas fullroot
-    LockScreenCanvas = tkinter.Canvas(RootWindow, width=w, height=h)
+    LockScreenCanvas = tk.Canvas(RootWindow, width=w, height=h)
     LockScreenCanvas.pack()
     LockScreenCanvas.configure(background='white') # Empty string means transparent
 
