@@ -8,6 +8,8 @@ elif sys.version_info.major == 3: # We are using Python 3.x
 
 sys.path.append('libraries')
 import keyboard
+import RPi.GPIO as GPIO
+
 
 ############################ Global variables ##################################
 
@@ -17,6 +19,17 @@ LockImagePath = './padlock.gif'
 LockImage = tk.PhotoImage(file=LockImagePath)
 
 LockScreenDisplayed = False
+
+LockButton = 3 # GPIO 3 is the Lock button
+LockButtonBounceTime = 200 # Bounce time in ms
+
+################################################################################
+
+
+############################### GPIO Setup #####################################
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(LockButton, GPIO.IN)
 
 ################################################################################
 
@@ -70,6 +83,15 @@ def toggleLockScreen(LockScreenToToggle):
 setLockScreen(RootLockScreen, LockImage)
 RootLockScreen.withdraw() # Start hidden
 
+## Lock screen triggers : keyboard + GPIO
 keyboard.add_hotkey('ctrl+shift+alt+l', toggleLockScreen, args=[RootLockScreen])
+GPIO.add_event_detect(
+    LockButton,
+    GPIO.RISING,
+    bouncetime=LockButtonBounceTime,
+    callback=lambda x: toggleLockScreen(RootLockScreen)
+)
 
 RootLockScreen.mainloop()
+
+GPIO.cleanup()
