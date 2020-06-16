@@ -8,7 +8,7 @@ elif sys.version_info.major == 3: # We are using Python 3.x
 
 sys.path.append('libraries')
 import keyboard
-import RPi.GPIO as GPIO
+import gpiozero
 
 
 ############################ Global variables ##################################
@@ -20,16 +20,9 @@ LockImage = tk.PhotoImage(file=LockImagePath)
 
 LockScreenDisplayed = False
 
-LockButton = 3 # GPIO 3 is the Lock button
+LockButtonNumber = 3 # GPIO 3 is the Lock button
 LockButtonBounceTime = 200 # Bounce time in ms
-
-################################################################################
-
-
-############################### GPIO Setup #####################################
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(LockButton, GPIO.IN)
+LockButtonHoldTime = 2 # Long press time
 
 ################################################################################
 
@@ -64,15 +57,15 @@ def setLockScreen(RootWindow, ImageToDisplay):
     # Take focus and start
     RootWindow.focus_set()
 
-def toggleLockScreen(LockScreenToToggle):
+def toggleLockScreen(Trigger, LockScreenToToggle):
     global LockScreenDisplayed
     if LockScreenDisplayed:
         LockScreenToToggle.withdraw()
-        # print("HIDDEN")
+        print("HIDDEN")
         LockScreenDisplayed = False
     else:
         LockScreenToToggle.deiconify()
-        # print("SHOWN")
+        print("SHOWN")
         LockScreenDisplayed = True
 
 ################################################################################
@@ -84,14 +77,18 @@ setLockScreen(RootLockScreen, LockImage)
 RootLockScreen.withdraw() # Start hidden
 
 ## Lock screen triggers : keyboard + GPIO
-keyboard.add_hotkey('ctrl+shift+alt+l', toggleLockScreen, args=[RootLockScreen])
-GPIO.add_event_detect(
-    LockButton,
-    GPIO.RISING,
-    bouncetime=LockButtonBounceTime,
-    callback=lambda x: toggleLockScreen(RootLockScreen)
+keyboard.add_hotkey('ctrl+shift+alt+l', toggleLockScreen, args=[False, RootLockScreen])
+
+LockButton = gpiozero.Button(
+    LockButtonNumber,
+    pull_up=True,
+    #active_state=False,
+    bounce_time=LockButtonBounceTime,
+    hold_time=LockButtonHoldTime
 )
+
+#LockButton.when_held = toggleLockScreen(LockButton, RootLockScreen)
+#LockButton.when_released = toggleLockScreen(LockButton, RootLockScreen)
 
 RootLockScreen.mainloop()
 
-GPIO.cleanup()
