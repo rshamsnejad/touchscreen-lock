@@ -5,6 +5,27 @@ CURRENT_DIR = os.path.dirname(os.path.realpath(__file__)) + '/'
 
 import sys
 
+############################### CLI ARGUMENT PARSING ###########################
+
+import getopt
+
+argument_list = sys.argv[1:]
+short_options = "k"
+long_options = "keyboard"
+
+try:
+    arguments, values = getopt.getopt(argument_list, short_options, long_options)
+except getopt.error as err:
+    print(str(err))
+    sys.exit(2)
+
+KeyboardActive = False
+for current_argument, current_value in arguments:
+    if current_argument in ("-k", "--keyboard"):
+        KeyboardActive = True
+
+################################################################################
+
 if sys.version_info.major == 2: # We are using Python 2.x
     import Tkinter as tk
 elif sys.version_info.major == 3: # We are using Python 3.x
@@ -13,7 +34,8 @@ elif sys.version_info.major == 3: # We are using Python 3.x
 import gpiozero, signal
 
 sys.path.append(CURRENT_DIR + 'libraries')
-import keyboard
+if KeyboardActive:
+    import keyboard
 
 ############################ Global variables ##################################
 
@@ -41,7 +63,8 @@ def setLockScreen(RootWindow, ImageToDisplay):
     RootWindow.attributes('-fullscreen', 'True')
 
     # Escape key to quit
-    RootWindow.bind("<Escape>", lambda e: (e.widget.withdraw(), e.widget.quit()))
+    if KeyboardActive:
+        RootWindow.bind("<Escape>", lambda e: (e.widget.withdraw(), e.widget.quit()))
 
     # Fullscreen dimensions
     w, h = RootWindow.winfo_screenwidth(), RootWindow.winfo_screenheight()
@@ -80,7 +103,8 @@ setLockScreen(RootLockScreen, LockImage)
 RootLockScreen.withdraw() # Start hidden
 
 ## Lock screen triggers : keyboard + GPIO
-keyboard.add_hotkey('ctrl+shift+alt+l', toggleLockScreen, args=[RootLockScreen])
+if KeyboardActive:
+    keyboard.add_hotkey('ctrl+shift+alt+l', toggleLockScreen, args=[RootLockScreen])
 
 LockButton = gpiozero.Button(
     LockButtonNumber,
