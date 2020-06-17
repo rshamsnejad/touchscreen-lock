@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+############################### SYSTEM MODULES #################################
+
 import os
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__)) + '/'
 
@@ -24,7 +26,7 @@ for current_argument, current_value in arguments:
     if current_argument in ("-k", "--keyboard"):
         KeyboardActive = True
 
-################################################################################
+########################## GUI AND INPUT MODULES ###############################
 
 if sys.version_info.major == 2: # We are using Python 2.x
     import Tkinter as tk
@@ -37,7 +39,7 @@ sys.path.append(CURRENT_DIR + 'libraries')
 if KeyboardActive:
     import keyboard
 
-############################ Global variables ##################################
+############################ GLOBAL VARIABLES ##################################
 
 RootLockScreen = tk.Tk()
 
@@ -50,10 +52,7 @@ LockButtonNumber = 3 # GPIO 3 is the Lock button
 LockButtonBounceTime = 0.1 # Bounce time in s
 LockButtonHoldTime = 2 # Long press time
 
-################################################################################
-
-
-############################ Functions #########################################
+############################## FUNCTIONS #######################################
 
 def setLockScreen(RootWindow, ImageToDisplay):
 
@@ -96,8 +95,9 @@ def toggleLockScreen(LockScreenToToggle):
 
 ################################################################################
 
+# ---------------------------------------------------------------------------- #
 
-################################ PROGRAM #######################################
+################################### MAIN #######################################
 
 setLockScreen(RootLockScreen, LockImage)
 RootLockScreen.withdraw() # Start hidden
