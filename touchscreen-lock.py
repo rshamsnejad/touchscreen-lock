@@ -50,7 +50,7 @@ LockScreenDisplayed = False
 
 LockButtonNumber = 3 # GPIO 3 is the Lock button
 LockButtonBounceTime = 0.1 # Bounce time in s
-LockButtonHoldTime = 2 # Long press time
+LockButtonHoldTime = 2 # Long press time in s
 
 ############################## FUNCTIONS #######################################
 
