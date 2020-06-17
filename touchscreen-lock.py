@@ -4,15 +4,16 @@ import os
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__)) + '/'
 
 import sys
+
 if sys.version_info.major == 2: # We are using Python 2.x
     import Tkinter as tk
 elif sys.version_info.major == 3: # We are using Python 3.x
     import tkinter as tk
 
+import gpiozero, signal
+
 sys.path.append(CURRENT_DIR + 'libraries')
 import keyboard
-import gpiozero
-import signal
 
 ############################ Global variables ##################################
 
