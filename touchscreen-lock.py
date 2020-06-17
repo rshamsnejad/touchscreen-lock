@@ -73,7 +73,7 @@ def setLockScreen(RootWindow, ImageToDisplay):
     # Set canvas fullroot
     LockScreenCanvas = tk.Canvas(RootWindow, width=w, height=h)
     LockScreenCanvas.pack()
-    LockScreenCanvas.configure(background='white') # Empty string means transparent
+    LockScreenCanvas.configure(background='white')
 
     # Display image in canvas
     ImageSprite = LockScreenCanvas.create_image(w/2, h/2, image=ImageToDisplay)
