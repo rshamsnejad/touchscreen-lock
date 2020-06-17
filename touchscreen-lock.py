@@ -16,7 +16,11 @@ short_options = "k"
 long_options = "keyboard"
 
 try:
-    arguments, values = getopt.getopt(argument_list, short_options, long_options)
+    arguments, values = getopt.getopt(
+        argument_list,
+        short_options,
+        long_options
+    )
 except getopt.error as err:
     print(str(err))
     sys.exit(2)
@@ -62,7 +66,10 @@ def setLockScreen(RootWindow, ImageToDisplay):
 
     # Escape key to quit
     if KeyboardActive:
-        RootWindow.bind("<Escape>", lambda e: (e.widget.withdraw(), e.widget.quit()))
+        RootWindow.bind(
+            "<Escape>",
+            lambda e: (e.widget.withdraw(), e.widget.quit())
+        )
 
     # Fullscreen dimensions
     w, h = RootWindow.winfo_screenwidth(), RootWindow.winfo_screenheight()
@@ -103,7 +110,11 @@ RootLockScreen.withdraw() # Start hidden
 
 ## Lock screen triggers : keyboard + GPIO
 if KeyboardActive:
-    keyboard.add_hotkey('ctrl+shift+alt+l', toggleLockScreen, args=[RootLockScreen])
+    keyboard.add_hotkey(
+        'ctrl+shift+alt+l',
+        toggleLockScreen,
+        args=[RootLockScreen]
+    )
 
 LockButton = gpiozero.Button(
     LockButtonNumber,
