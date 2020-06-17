@@ -112,8 +112,6 @@ LockButton = gpiozero.Button(
     bounce_time=LockButtonBounceTime,
     hold_time=LockButtonHoldTime
 )
-
 LockButton.when_held = lambda: toggleLockScreen(RootLockScreen)
 
 RootLockScreen.mainloop()
-
