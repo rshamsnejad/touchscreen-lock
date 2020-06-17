@@ -41,7 +41,7 @@ if KeyboardActive:
 
 RootLockScreen = tk.Tk()
 
-LockImagePath = CURRENT_DIR + 'padlock.gif'
+LockImagePath = CURRENT_DIR + 'pictures/padlock.gif'
 LockImage = tk.PhotoImage(file=LockImagePath)
 
 LockScreenDisplayed = False
