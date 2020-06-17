@@ -21,7 +21,7 @@ LockImage = tk.PhotoImage(file=LockImagePath)
 LockScreenDisplayed = False
 
 LockButtonNumber = 3 # GPIO 3 is the Lock button
-LockButtonBounceTime = 200 # Bounce time in ms
+LockButtonBounceTime = 0.1 # Bounce time in s
 LockButtonHoldTime = 2 # Long press time
 
 ################################################################################
@@ -57,7 +57,7 @@ def setLockScreen(RootWindow, ImageToDisplay):
     # Take focus and start
     RootWindow.focus_set()
 
-def toggleLockScreen(Trigger, LockScreenToToggle):
+def toggleLockScreen(LockScreenToToggle):
     global LockScreenDisplayed
     if LockScreenDisplayed:
         LockScreenToToggle.withdraw()
@@ -77,18 +77,16 @@ setLockScreen(RootLockScreen, LockImage)
 RootLockScreen.withdraw() # Start hidden
 
 ## Lock screen triggers : keyboard + GPIO
-keyboard.add_hotkey('ctrl+shift+alt+l', toggleLockScreen, args=[False, RootLockScreen])
+keyboard.add_hotkey('ctrl+shift+alt+l', toggleLockScreen, args=[RootLockScreen])
 
 LockButton = gpiozero.Button(
     LockButtonNumber,
     pull_up=True,
-    #active_state=False,
     bounce_time=LockButtonBounceTime,
     hold_time=LockButtonHoldTime
 )
 
-#LockButton.when_held = toggleLockScreen(LockButton, RootLockScreen)
-#LockButton.when_released = toggleLockScreen(LockButton, RootLockScreen)
+LockButton.when_held = lambda: toggleLockScreen(RootLockScreen)
 
 RootLockScreen.mainloop()
 
