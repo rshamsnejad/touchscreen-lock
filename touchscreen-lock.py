@@ -41,7 +41,6 @@ def setLockScreen(RootWindow, ImageToDisplay):
 
     # Escape key to quit
     RootWindow.bind("<Escape>", lambda e: (e.widget.withdraw(), e.widget.quit()))
-    # RootWindow.bind("<Escape>", lambda e: (toggleLockScreen(RootWindow)))
 
     # Fullscreen dimensions
     w, h = RootWindow.winfo_screenwidth(), RootWindow.winfo_screenheight()
@@ -64,11 +63,11 @@ def toggleLockScreen(LockScreenToToggle):
     global LockScreenDisplayed
     if LockScreenDisplayed:
         LockScreenToToggle.withdraw()
-        print("HIDDEN")
+        # print("HIDDEN")
         LockScreenDisplayed = False
     else:
         LockScreenToToggle.deiconify()
-        print("SHOWN")
+        # print("SHOWN")
         LockScreenDisplayed = True
 
 ################################################################################
