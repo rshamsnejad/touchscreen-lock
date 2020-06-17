@@ -55,7 +55,6 @@ LockButtonHoldTime = 2 # Long press time in s
 ############################## FUNCTIONS #######################################
 
 def setLockScreen(RootWindow, ImageToDisplay):
-
     # Root attributes
     RootWindow.attributes('-type', 'normal')
     RootWindow.attributes('-alpha', 0.5) # 50% global transparency
