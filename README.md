@@ -10,9 +10,9 @@ It has been wrote originally to be used in a project using the official 7" touch
 
 ## Dependencies
 
-* Tk (should be installed on most Raspberry Pi distros)
-* GPIOZero (should be installed on most Raspberry Pi distros)
-* A running compositor with transparency support, if needed (for example : `xcompmgr`)
+* [Tk](https://www.tcl.tk/software/tcltk/) (should be installed on most Raspberry Pi distros)
+* [GPIOZero](https://github.com/gpiozero/gpiozero) (should be installed on most Raspberry Pi distros)
+* A running compositor with transparency support, if needed (for example [xcompmgr](https://github.com/freedesktop/xcompmgr))
 
 ## Installing and running
 
