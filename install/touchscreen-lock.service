@@ -1,0 +1,12 @@
+[Unit]
+Description=Raspberry Pi Touchscreen Locker
+After=graphical.target
+
+[Service]
+Type=simple
+User=<Graphical User>
+Environment="DISPLAY=:0.0"
+ExecStart=<Path to touchscreen-lock.py>
+
+[Install]
+WantedBy=graphical.target
