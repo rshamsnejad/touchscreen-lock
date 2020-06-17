@@ -31,7 +31,7 @@ if sys.version_info.major == 2: # We are using Python 2.x
 elif sys.version_info.major == 3: # We are using Python 3.x
     import tkinter as tk
 
-import gpiozero, signal
+import gpiozero
 
 sys.path.append(CURRENT_DIR + 'libraries')
 if KeyboardActive:
