@@ -46,11 +46,12 @@ if KeyboardActive:
 ############################ GLOBAL VARIABLES ##################################
 
 RootLockScreen = tk.Tk()
+LockScreenDisplayed = False
+
+#### Below variables can be customized to fit your needs
 
 LockImagePath = CURRENT_DIR + 'pictures/padlock.gif'
 LockImage = tk.PhotoImage(file=LockImagePath)
-
-LockScreenDisplayed = False
 
 LockButtonNumber = 3 # GPIO 3 is the Lock button
 LockButtonBounceTime = 0.1 # Bounce time in s
