@@ -1,5 +1,5 @@
 [Unit]
-Description=Raspberry Pi Touchscreen Locker
+Description=Raspberry Pi Touchscreen Lock Screen
 After=graphical.target
 
 [Service]
