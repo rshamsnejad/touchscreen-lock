@@ -69,6 +69,7 @@ def setLockScreen(RootWindow, ImageToDisplay):
     RootWindow.attributes('-fullscreen', 'True')
 
     # Escape key to quit
+    global KeyboardActive
     if KeyboardActive:
         RootWindow.bind(
             "<Escape>",
