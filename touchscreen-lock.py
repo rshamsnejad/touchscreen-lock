@@ -7,58 +7,18 @@ CURRENT_DIR = os.path.dirname(os.path.realpath(__file__)) + '/'
 
 import sys
 
-############################### CLI ARGUMENT PARSING ###########################
-
-import getopt
-
-argument_list = sys.argv[1:]
-short_options = "k"
-long_options = "keyboard"
-
-try:
-    arguments, values = getopt.getopt(
-        argument_list,
-        short_options,
-        long_options
-    )
-except getopt.error as err:
-    print(str(err))
-    sys.exit(2)
-
-KeyboardActive = False
-for current_argument, current_value in arguments:
-    if current_argument in ("-k", "--keyboard"):
-        KeyboardActive = True
-
-########################## GUI AND INPUT MODULES ###############################
-
-if sys.version_info.major == 2: # We are using Python 2.x
-    import Tkinter as tk
-elif sys.version_info.major == 3: # We are using Python 3.x
-    import tkinter as tk
-
-import gpiozero
-
-sys.path.append(CURRENT_DIR + 'libraries')
-if KeyboardActive:
-    import keyboard
-
 ############################ GLOBAL VARIABLES ##################################
 
-RootLockScreen = tk.Tk()
+LockImagePath = CURRENT_DIR + 'pictures/padlock.gif'
+
 LockScreenDisplayed = False
 
-#### Below variables can be customized to fit your needs
+LockButtonNumber = 3 # Default GPIO input
+LockButtonBounceTime = 0.1 # Default bounce time in s
+LockButtonHoldTime = 2 # Default long press time in s
 
-LockImagePath = CURRENT_DIR + 'pictures/padlock.gif'
-LockImage = tk.PhotoImage(file=LockImagePath)
-
-LockButtonNumber = 3 # GPIO 3 is the Lock button
-LockButtonBounceTime = 0.1 # Bounce time in s
-LockButtonHoldTime = 2 # Long press time in s
-
-if KeyboardActive:
-    LockKeys = 'ctrl+shift+alt+l'
+LockKeys = 'ctrl+shift+alt+l'
+KeyboardActive = False
 
 ############################## FUNCTIONS #######################################
 
@@ -104,11 +64,110 @@ def toggleLockScreen(LockScreenToToggle):
         # print("SHOWN")
         LockScreenDisplayed = True
 
+def die(Message):
+    sys.stderr.write("ERROR : " + Message + '\n')
+    sys.exit(1)
+
+############################## CLI ARGUMENT PARSING ###########################
+
+import argparse
+
+CLIParser = argparse.ArgumentParser(
+    description="Raspberry Pi Touschreen Lock Screen"
+)
+
+CLIParser.add_argument(
+    "-k", "--keyboard",
+    action="store",
+    type=str,
+    nargs='?',
+    default=LockKeys,
+    const=LockKeys,
+    help="Use key combination to toggle the lock screen. \
+    Default is Ctrl+Shift+Alt+L, and a custom combination can be specified."
+)
+CLIParser.add_argument(
+    "-g", "--gpi",
+    action="store",
+    type=int,
+    choices=range(0, 27),
+    metavar="[0-27]",
+    default=LockButtonNumber,
+    help="Custom GPI pin to use in the BCM numbering system. \
+    Default is GPIO 3."
+)
+CLIParser.add_argument(
+    "-b", "--bounce-time",
+    action="store",
+    type=float,
+    default=LockButtonBounceTime,
+    help="Bounce time in seconds. Default is 0.1s."
+)
+CLIParser.add_argument(
+    "-t", "--hold-time",
+    action="store",
+    type=float,
+    default=LockButtonHoldTime,
+    help="Long press time in seconds. Default is 2s."
+)
+CLIParser.add_argument(
+    "-p", "--picture",
+    action="store",
+    type=str,
+    default=LockImagePath,
+    help="Path to custom picture. Only GIF and PGM/PPM are supported."
+)
+
+CLIArguments = CLIParser.parse_args()
+
+if CLIArguments.keyboard:
+    KeyboardActive = True
+    # TODO : How to check input sanity ?
+
+LockButtonNumber = CLIArguments.gpi
+
+if CLIArguments.bounce_time >= 0:
+    LockButtonBounceTime = CLIArguments.bounce_time
+else:
+    die("Invalid bounce time")
+
+if CLIArguments.hold_time >= 0:
+    LockButtonHoldTime = CLIArguments.hold_time
+else:
+    die("Invalid hold time")
+
+
+if os.access(CLIArguments.picture, os.R_OK):
+    FileName, FileExtension = os.path.splitext(CLIArguments.picture)
+    if FileExtension in (".gif", ".pgm", ".ppm"):
+        LockImagePath = CLIArguments.picture
+    else:
+        die("Wrong picture format. Only GIF and PGM/PPM are supported.")
+else:
+    die("Can't read file : " + CLIArguments.picture)
+
+########################## GUI AND INPUT MODULES ###############################
+
+if sys.version_info.major == 2: # We are using Python 2.x
+    import Tkinter as tk
+elif sys.version_info.major == 3: # We are using Python 3.x
+    import tkinter as tk
+
+import gpiozero
+
+sys.path.append(CURRENT_DIR + 'libraries')
+if KeyboardActive:
+    import keyboard
+
 ################################################################################
 
 # ---------------------------------------------------------------------------- #
 
 ################################### MAIN #######################################
+
+RootLockScreen = tk.Tk()
+
+LockImage = tk.PhotoImage(file=LockImagePath)
 
 setLockScreen(RootLockScreen, LockImage)
 RootLockScreen.withdraw() # Start hidden
