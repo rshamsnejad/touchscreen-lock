@@ -83,6 +83,7 @@ CLIParser.add_argument(
     nargs='?',
     default=LockKeys,
     const=LockKeys,
+    metavar="KEY_COMBINATION",
     help="Use key combination to toggle the lock screen. \
     Default is Ctrl+Shift+Alt+L, and a custom combination can be specified."
 )
@@ -91,8 +92,8 @@ CLIParser.add_argument(
     action="store",
     type=int,
     choices=range(0, 27),
-    metavar="[0-27]",
     default=LockButtonNumber,
+    metavar="[0-27]",
     help="Custom GPI pin to use in the BCM numbering system. \
     Default is GPIO 3."
 )
