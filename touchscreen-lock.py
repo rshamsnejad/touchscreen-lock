@@ -12,8 +12,8 @@ import sys
 import getopt
 
 argument_list = sys.argv[1:]
-short_options = "k"
-long_options = "keyboard"
+short_options = "k:g:b:t:p:h"
+long_options = ["keyboard=", "gpio=", "bounce-time=", "hold-time=", "picture=", "help"]
 
 try:
     arguments, values = getopt.getopt(
@@ -25,10 +25,73 @@ except getopt.error as err:
     print(str(err))
     sys.exit(2)
 
+############################ GLOBAL VARIABLES ##################################
+
+LockImagePath = CURRENT_DIR + 'pictures/padlock.gif'
+
+LockScreenDisplayed = False
+
+LockButtonNumber = 3 # Default GPIO input
+LockButtonBounceTime = 0.1 # Default bounce time in s
+LockButtonHoldTime = 2 # Default long press time in s
+
+LockKeys = 'ctrl+shift+alt+l'
 KeyboardActive = False
+
 for current_argument, current_value in arguments:
+
     if current_argument in ("-k", "--keyboard"):
         KeyboardActive = True
+        InputString = str(current_value)
+        # TODO : How to check input sanity ?
+        if InputString != "":
+            LockKeys = InputString
+
+    elif current_argument in ("-g", "--gpio"):
+        InputNumber = int(current_value)
+        if 0 <= InputNumber <= 26:
+            LockButtonNumber = InputNumber
+        else:
+            die("Invalid GPIO pin")
+            
+    elif current_argument in ("-b", "--bounce-time"):
+        InputNumber = float(current_value)
+        if InputNumber >= 0:
+            LockButtonBounceTime = InputNumber
+        else:
+            die("Invalid bounce time")
+
+    elif current_argument in ("-t", "--hold-time"):
+        InputNumber = float(current_value)
+        if InputNumber >= 0:
+            LockButtonHoldTime = InputNumber
+        else:
+            die("Invalid hold time")
+
+    elif current_argument in ("-l", "--lock-keys"):
+        InputString = str(current_value)
+        # TODO : How to check input sanity ?
+        LockKeys = InputString
+
+    elif current_argument in ("-p" , "--picture"):
+        InputString = str(current_value)
+        if os.access(InputString, os.R_OK):
+            FileName, FileExtension = os.path.splitext(InputString)
+            if FileExtension in (".gif", ".pgm", ".ppm"):
+                LockImagePath = InputString
+            else:
+                die("Wrong picture format. Only GIF and PGM/PPM are supported.")
+        else:
+            die("Can't read file : " + InputString)
+
+    elif current_argument in ("-h", "--help"):
+        printHelp()
+        sys.exit(0)
+
+    else:
+        sys.stderr.write("ERROR : Unknown parameter.")
+        printHelp()
+        sys.exit(1)
 
 ########################## GUI AND INPUT MODULES ###############################
 
@@ -42,23 +105,6 @@ import gpiozero
 sys.path.append(CURRENT_DIR + 'libraries')
 if KeyboardActive:
     import keyboard
-
-############################ GLOBAL VARIABLES ##################################
-
-RootLockScreen = tk.Tk()
-LockScreenDisplayed = False
-
-#### Below variables can be customized to fit your needs
-
-LockImagePath = CURRENT_DIR + 'pictures/padlock.gif'
-LockImage = tk.PhotoImage(file=LockImagePath)
-
-LockButtonNumber = 3 # GPIO 3 is the Lock button
-LockButtonBounceTime = 0.1 # Bounce time in s
-LockButtonHoldTime = 2 # Long press time in s
-
-if KeyboardActive:
-    LockKeys = 'ctrl+shift+alt+l'
 
 ############################## FUNCTIONS #######################################
 
@@ -103,11 +149,19 @@ def toggleLockScreen(LockScreenToToggle):
         # print("SHOWN")
         LockScreenDisplayed = True
 
+def die(Message):
+    sys.stderr.write(Message)
+    sys.exit(1)
+
 ################################################################################
 
 # ---------------------------------------------------------------------------- #
 
 ################################### MAIN #######################################
+
+RootLockScreen = tk.Tk()
+
+LockImage = tk.PhotoImage(file=LockImagePath)
 
 setLockScreen(RootLockScreen, LockImage)
 RootLockScreen.withdraw() # Start hidden
