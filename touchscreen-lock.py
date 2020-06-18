@@ -81,7 +81,7 @@ CLIParser.add_argument(
     action="store",
     type=str,
     nargs='?',
-    default=LockKeys,
+    default="",
     const=LockKeys,
     metavar="KEY_COMBINATION",
     help="Use key combination to toggle the lock screen. \
@@ -124,6 +124,7 @@ CLIArguments = CLIParser.parse_args()
 if CLIArguments.keyboard:
     KeyboardActive = True
     # TODO : How to check input sanity ?
+LockKeys=CLIArguments.keyboard
 
 LockButtonNumber = CLIArguments.gpi
 
